@@ -1,0 +1,6 @@
+﻿parameter,value
+simulation_length,310
+labour_price_day_rp,82000
+rp_to_usd,6.73E-05
+plot_size_ha,1
+regrowth_on,0

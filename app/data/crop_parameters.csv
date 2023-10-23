@@ -1,0 +1,97 @@
+﻿crop,parameter,value
+cocoa,max_age,300
+cocoa,mortality_rate,0.001
+cocoa,growth_rate,0.15
+cocoa,reference_density,784
+cocoa,price_rp_t,30000
+cocoa,max_ag_biomass,100
+cocoa,root_shoot_ratio,0.23
+cocoa,c_content,0.5
+cocoa,type,1
+durian,max_age,302
+durian,mortality_rate,0.001
+durian,growth_rate,0.15
+durian,reference_density,144
+durian,price_rp_t,9
+durian,max_ag_biomass,15
+durian,root_shoot_ratio,0.18
+durian,c_content,0.5
+durian,type,1
+coconut,max_age,299
+coconut,mortality_rate,0.001
+coconut,growth_rate,0.15
+coconut,reference_density,143
+coconut,price_rp_t,30000
+coconut,max_ag_biomass,15
+coconut,root_shoot_ratio,0.18
+coconut,c_content,0.45
+coconut,type,1
+avocado,max_age,302
+avocado,mortality_rate,0.001
+avocado,growth_rate,0.15
+avocado,reference_density,333
+avocado,price_rp_t,30000
+avocado,max_ag_biomass,100
+avocado,root_shoot_ratio,0.23
+avocado,c_content,0.5
+avocado,type,1
+banana,max_age,300
+banana,mortality_rate,0.001
+banana,growth_rate,0.15
+banana,reference_density,900
+banana,price_rp_t,30000
+banana,max_ag_biomass,100
+banana,root_shoot_ratio,0.23
+banana,c_content,0.5
+banana,type,1
+long beans,max_age,12
+long beans,mortality_rate,0.01
+long beans,growth_rate,0.5
+long beans,reference_density,61440
+long beans,price_rp_t,20000
+long beans,max_ag_biomass,2
+long beans,root_shoot_ratio,0.23
+long beans,c_content,0.45
+long beans,type,1
+nutmeg,max_age,300
+nutmeg,mortality_rate,0.001
+nutmeg,growth_rate,0.15
+nutmeg,reference_density,277
+nutmeg,price_rp_t,30000
+nutmeg,max_ag_biomass,100
+nutmeg,root_shoot_ratio,0.23
+nutmeg,c_content,0.5
+nutmeg,type,1
+sengon,max_age,71
+sengon,mortality_rate,0.0015
+sengon,growth_rate,0.5
+sengon,reference_density,1.11
+sengon,price_rp_t,9
+sengon,max_ag_biomass,30
+sengon,root_shoot_ratio,0.23
+sengon,c_content,0.45
+sengon,type,2
+sengon,wood_density,1
+sengon,expansion_factor,1
+red teak,max_age,299
+red teak,mortality_rate,0.001
+red teak,growth_rate,0.5
+red teak,reference_density,3333
+red teak,price_rp_t,9
+red teak,max_ag_biomass,30
+red teak,root_shoot_ratio,0.23
+red teak,c_content,0.45
+red teak,type,2
+red teak,wood_density,1
+red teak,expansion_factor,1
+white teak,max_age,299
+white teak,mortality_rate,0.001
+white teak,growth_rate,0.5
+white teak,reference_density,3333
+white teak,price_rp_t,9
+white teak,max_ag_biomass,30
+white teak,root_shoot_ratio,0.23
+white teak,c_content,0.45
+white teak,type,2
+white teak,wood_density,1
+white teak,expansion_factor,1

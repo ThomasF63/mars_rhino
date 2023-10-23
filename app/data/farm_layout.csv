@@ -1,0 +1,11 @@
+﻿crop,planting,parameter,value
+cocoa,a,planting_time,1
+cocoa,a,starting_density,1111
+cocoa,a,starting_age,0
+cocoa,a,post_cycle,0
+cocoa,a,cycles,1
+white teak,a,planting_time,1
+white teak,a,starting_density,3333
+white teak,a,starting_age,0
+white teak,a,post_cycle,0
+white teak,a,cycles,1
