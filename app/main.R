@@ -3,12 +3,14 @@
 
 # Import libraries
 box::use(
-  shiny[bootstrapPage, navbarPage, tabPanel, div, moduleServer, NS, renderUI, tags, uiOutput],
-  readr[read_csv],
+  shiny[bootstrapPage, navbarPage, tabPanel, div, moduleServer, NS, renderUI, tags, uiOutput, reactiveValues, reactive],
 )
 # Import modules
 box::use(
-  app/view/sim_handler,
+  app/view/raw_outputs,
+  #app/view/import_params,
+  app/logic/file_io[get_params,get_crop_cals],
+  app/logic/sim_run[run_sim],
 )
 
 #' @export
@@ -22,12 +24,14 @@ ui = function(id) {
                         #, load dashboard components
                         ),
 
-               tabPanel("Config"
+               tabPanel("Config",
+                        # import disabled until upload sorted out
+                        # import_params$ui(ns("sim_inputs"))
                         # display interactive param table
                         ),
 
                tabPanel("Raw Data",
-                        sim_handler$ui(ns("do_sim"))
+                        raw_outputs$ui(ns("sim_outputs"))
                         ),
 
                )
@@ -40,18 +44,38 @@ server = function(id) {
 
   moduleServer(id, function(input, output, session) {
 
-    # Inputs (v1: static, reactive in future)
-    params = list(sim_params = read_csv("app/data/parameters.csv"),
-                  crop_params = read_csv("app/data/crop_parameters.csv"),
-                  farm_layout = read_csv("app/data/farm_layout.csv"),
-                  sheet_lookup = read_csv("app/data/sheet_lookup.csv"),
+    # Inputs
+    # Disable the below until file upload sorted out
+    # params = reactiveValues(sim_params = import_params$server("sim_inputs")$sim_params,
+    #                         crop_params = import_params$server("sim_inputs")$crop_params,
+    #                         farm_layout = import_params$server("sim_inputs")$farm_layout,
+    #                         cal_lookup = import_params$server("sim_inputs")$cal_lookup,
+    #                         cal_path = import_params$server("sim_inputs")$cal_path,
+    #                         crop_cals = import_params$server("sim_inputs")$crop_cals
+    #                         )
 
-                  # move extraction here - it's very slow so I only want to do it once (startup)
-                  cal_path = "app/data/Crop Calendars - Prod, Labor and Materials .xlsx"
-    )
+# import the crop cals here
+
+    params = get_params("app/data/parameters.xlsx")
+    cals = get_crop_cals("app/data/Crop Calendars - Prod, Labor and Materials .xlsx",params$cal_lookup)
+
+    # now make the above reactive
+
+    # Reactive simulation
+    sim = reactive({
+
+      run_sim(params$sim_params,
+              params$crop_params,
+              params$farm_layout,
+              #params$crop_cals
+              cals)
+
+      })
+
+    # make reactive parameters edit-able
 
     # Raw Data tab
-    sim = sim_handler$server("do_sim",params=params)
+    raw_outputs$server("sim_outputs",sim_dat=sim)
 
   })
 

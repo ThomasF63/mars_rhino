@@ -5,7 +5,7 @@
 # Libraries
 box::use(
   dplyr[...],
-  tidyr[unnest],
+  tidyr[unnest,pivot_longer],
   purrr[map,map2],
   janitor[clean_names],
   readxl[read_excel],
@@ -19,28 +19,20 @@ box::use(
 
 #' Run the simulation with a given parameter set
 #' @export
-run_sim = function(sim_params,crop_params,farm_layout,sheet_lookup,cal_path){
+run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals){
 
   #### INITIALIZATION ####
 
+  #' Pivot all the parameters longer for easier extraction
+  crop_params = pivot_longer(crop_params,!crop,names_to="parameter",values_to="value")
+  farm_layout = pivot_longer(farm_layout,!crop:planting,names_to="parameter",values_to="value")
+
   #' Extract the crop calendars
   #' import crop calendar sheet, per crop in the layout
-
   crop_cals = farm_layout %>%
     dplyr::select(crop,planting) %>%
     distinct() %>%
-    # for now just use crop, ignore the planting
-    # probably better to use a crosswalk to better accommodate minor entry errors like case
-    left_join(sheet_lookup) %>%
-    mutate(calendar = purrr::map(sheet,
-                                 \(s) read_excel(cal_path,sheet=s) %>%
-                                   #drop the filler and plot columns
-                                   select(-contains(c('...','Graph','Grafik'))) %>%
-                                   #also weed out any empty columns
-                                   clean_names()
-                                 )
-    ) %>%
-    select(-sheet)
+    left_join(all_crop_cals)
 
 
   # build farm timeseries (shell), farm(t)
