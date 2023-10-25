@@ -9,6 +9,7 @@ box::use(
 box::use(
   app/view/raw_outputs,
   #app/view/import_params,
+  app/view/param_browser,
   app/logic/file_io[get_params,get_crop_cals],
   app/logic/sim_run[run_sim],
 )
@@ -27,7 +28,7 @@ ui = function(id) {
                tabPanel("Config",
                         # import disabled until upload sorted out
                         # import_params$ui(ns("sim_inputs"))
-                        # display interactive param table
+                        param_browser$ui(ns("browser"))
                         ),
 
                tabPanel("Raw Data",
@@ -44,35 +45,30 @@ server = function(id) {
 
   moduleServer(id, function(input, output, session) {
 
-    # Inputs
-    # Disable the below until file upload sorted out
-    # params = reactiveValues(sim_params = import_params$server("sim_inputs")$sim_params,
-    #                         crop_params = import_params$server("sim_inputs")$crop_params,
-    #                         farm_layout = import_params$server("sim_inputs")$farm_layout,
-    #                         cal_lookup = import_params$server("sim_inputs")$cal_lookup,
-    #                         cal_path = import_params$server("sim_inputs")$cal_path,
-    #                         crop_cals = import_params$server("sim_inputs")$crop_cals
-    #                         )
+    # Import base data
+    # We hold onto these to undo changes to values (not implemented yet)
+    base_params = get_params("app/data/parameters.xlsx")
+    base_cals = get_crop_cals("app/data/Crop Calendars - Prod, Labor and Materials .xlsx",base_params$cal_lookup)
 
-# import the crop cals here
+    # Now make them reactive
+    params = reactiveValues(sim_params = base_params$sim_params,
+                            crop_params = base_params$crop_params,
+                            farm_layout = base_params$farm_layout,
+                            crop_cals = base_cals)
 
-    params = get_params("app/data/parameters.xlsx")
-    cals = get_crop_cals("app/data/Crop Calendars - Prod, Labor and Materials .xlsx",params$cal_lookup)
-
-    # now make the above reactive
+    # Now make them edit-able
+    params = param_browser$server("browser",params)
 
     # Reactive simulation
     sim = reactive({
-
       run_sim(params$sim_params,
               params$crop_params,
               params$farm_layout,
-              #params$crop_cals
-              cals)
-
+              params$crop_cals)
       })
 
-    # make reactive parameters edit-able
+    # Dashboard
+
 
     # Raw Data tab
     raw_outputs$server("sim_outputs",sim_dat=sim)

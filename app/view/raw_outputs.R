@@ -1,9 +1,8 @@
 # app/view/raw_outputs.R
 
 box::use(
-  dplyr[...],
-  reactable,
-  shiny[h3, moduleServer, NS, tagList, reactive],
+  DT[DTOutput,renderDT],
+  shiny[h3, moduleServer, NS, tagList],
 )
 box::use(
   app/logic/sim_run[run_sim],
@@ -15,7 +14,7 @@ ui <- function(id) {
 
   tagList(
     h3("Raw outputs"),
-    reactable$reactableOutput(ns("table"))
+    DTOutput(ns("raw_dat"))
   )
 }
 
@@ -24,10 +23,9 @@ server <- function(id,sim_dat) {
 
   moduleServer(id, function(input, output, session) {
 
-    output$table = reactable$renderReactable(
-      sim_dat() %>%
-        reactable$reactable()
-    )
+    # Eventually replace the DT button with a Shiny one, easier to customise and doesn't require client-side rendering
+    output$raw_dat = renderDT(sim_dat(), extensions = 'Buttons', rownames=T, server=F,
+                              options = list(dom = "Blfrtip", buttons=c('csv')))
 
   })
 
