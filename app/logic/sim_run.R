@@ -5,7 +5,7 @@
 # Libraries
 box::use(
   dplyr[...],
-  tidyr[unnest,pivot_longer],
+  tidyr[unnest,pivot_longer,replace_na],
   purrr[map,map2],
   janitor[clean_names],
   readxl[read_excel],
@@ -134,7 +134,15 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals){
   #    production = revenues,
   #    costs = left_join(labour_costs,material_costs,by=c("t","year","age","cycle","crop","planting","density"))
   #  )
-    revenues
+    revenues %>%
+      left_join(
+        left_join(labour_costs,material_costs,by=c("t","year","age","cycle","crop","planting","density")),
+        by=c("t","year","age","cycle","crop","planting","density")
+      ) %>%
+      mutate(
+        across(contains('mat_costs') | contains('labor_time'),
+               ~ replace_na(.x,0))
+      )
   )
 
 

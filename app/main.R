@@ -7,6 +7,7 @@ box::use(
 )
 # Import modules
 box::use(
+  app/view/dashboard,
   app/view/raw_outputs,
   #app/view/import_params,
   app/view/param_browser,
@@ -21,13 +22,12 @@ ui = function(id) {
 
     navbarPage("mars demo", id="nav", collapsible = T, windowTitle = "placeholder title",
 
-               tabPanel("Dashboard"
-                        #, load dashboard components
-                        ),
+               tabPanel("Dashboard",
+                        dashboard$ui(ns("sim_dashboard"))
+               ),
 
                tabPanel("Config",
-                        # import disabled until upload sorted out
-                        # import_params$ui(ns("sim_inputs"))
+                        # import_params$ui(ns("sim_inputs")) # import disabled until upload sorted out
                         param_browser$ui(ns("browser"))
                         ),
 
@@ -61,14 +61,15 @@ server = function(id) {
 
     # Reactive simulation
     sim = reactive({
+      # simplify to run_sim(params) and extract each one within run_sim()
       run_sim(params$sim_params,
               params$crop_params,
               params$farm_layout,
               params$crop_cals)
       })
 
-    # Dashboard
-
+    # Dashboard tab
+    dashboard$server("sim_dashboard",sim_dat=sim)
 
     # Raw Data tab
     raw_outputs$server("sim_outputs",sim_dat=sim)

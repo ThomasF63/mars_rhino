@@ -1,9 +1,13 @@
 # This file allows packrat (used by rsconnect during deployment) to pick up dependencies.
+library(bslib)
 library(dplyr)
 library(DT)
+library(echarts4r)
 library(janitor)
 library(purrr)
 library(reactable)
 library(readxl)
 library(rhino)
+library(shinydashboard)
+library(shinyWidgets)
 library(tidyverse)

@@ -4,9 +4,6 @@ box::use(
   DT[DTOutput,renderDT],
   shiny[h3, moduleServer, NS, tagList],
 )
-box::use(
-  app/logic/sim_run[run_sim],
-)
 
 #' @export
 ui <- function(id) {
@@ -25,7 +22,7 @@ server <- function(id,sim_dat) {
 
     # Eventually replace the DT button with a Shiny one, easier to customise and doesn't require client-side rendering
     output$raw_dat = renderDT(sim_dat(), extensions = 'Buttons', rownames=T, server=F,
-                              options = list(dom = "Blfrtip", buttons=c('csv')))
+                              options = list(dom = "Blfrtip", buttons=c('colvis','csv')))
 
   })
 
