@@ -31,13 +31,15 @@ server <- function(id,processed_sim_dat) {
       'group_by(crop,planting)',
       'echarts4r$e_chart(x=t, timeline=T)',
       'echarts4r$e_line(yield)',
+      'echarts4r$e_line(...)',
       'echarts4r$e_line(density)',
       'echarts4r$e_tooltip()'
     )
 
-    join_exprs <- function(exprs, op=`%>%`) {
+    build_pipeline <- function(commands, op=`%>%`) {
       # not sure why ensym(`%>%`) doesnt work directly but it doesnt
       pipe = ensym(op)
+      exprs = parse_exprs(commands)
       new_call = exprs[[1]]
       for(x in exprs[-1]) {
         new_call = expr((!!pipe)(!!new_call,!!x))
@@ -62,7 +64,7 @@ server <- function(id,processed_sim_dat) {
         #echarts4r$e_add_nested("color",activity) %>%
         #echarts4r$e_x_axis(t) %>%
         #echarts4r$e_tooltip()
-      eval(join_exprs(parse_exprs(expr)))
+      eval(build_pipeline(expr))
     )
 
   })
