@@ -1,5 +1,6 @@
 # app/view/dashboard_widgets/mats_drill.R
 # timeline currently appears to be a dead-end due to lack of support for nesting
+# may provide a decent way to handle adding/removing series: https://echarts4r.john-coene.com/articles/proxies
 
 box::use(
   dplyr[...],
@@ -30,9 +31,19 @@ server <- function(id,processed_sim_dat) {
       'processed_sim_dat()',
       'group_by(crop,planting)',
       'echarts4r$e_chart(x=t, timeline=T)',
-      'echarts4r$e_line(yield)',
-      'echarts4r$e_line(density)',
+      'echarts4r$e_line(mat_costs_plant)',
+      'echarts4r$e_line(mat_costs_lp)',
+      'echarts4r$e_line(mat_costs_ferti)',
+      'echarts4r$e_line(mat_costs_wc_manual)',
+      'echarts4r$e_line(mat_costs_wc_herbicide)',
+      'echarts4r$e_line(mat_costs_pdc)',
+      'echarts4r$e_line(mat_costs_wc)',
+      'echarts4r$e_line(mat_costs_ph)',
+      'echarts4r$e_line(mat_costs_prun)',
+      'echarts4r$e_legend(type="scroll",top=30)',
+      'echarts4r$e_title("Material costs","")',
       'echarts4r$e_tooltip()'
+      #'echarts4r$e_datazoom(x_index = 0, type = "slider")'
     )
 
     build_pipeline <- function(commands, op=`%>%`) {
