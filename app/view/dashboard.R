@@ -8,10 +8,11 @@
 box::use(
   dplyr[...],
   shiny[h3, moduleServer, NS, fluidPage, fluidRow, reactive, renderText, textOutput],
-  bslib[page_fluid,layout_columns,layout_column_wrap,value_box],
+  bslib[page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
 )
 box::use(
   app/logic/kpis,
+  app/view/raw_outputs,
   app/view/dashboard_widgets/revenue_ts,
   app/view/dashboard_widgets/balance_ts,
   app/view/dashboard_widgets/yields_ts,
@@ -24,7 +25,10 @@ box::use(
 ui <- function(id) {
   ns <- NS(id)
 
-  page_fluid(
+  navset_tab(
+  #page_fluid(
+  nav_panel(
+    title="Main",
 
     # Later on handle KPI panels with a kpi module
     layout_columns(
@@ -44,6 +48,12 @@ ui <- function(id) {
       carbon_ts$ui(ns("carbon_plot")),
       mats_drill$ui(ns("mats_plot")),
     )
+  ),
+
+  nav_panel(
+    title="Data",
+    raw_outputs$ui(ns("dats"))
+  )
   )
 }
 
@@ -67,6 +77,8 @@ server <- function(id,sim_dat) {
     density_ts$server("density_plot",sim_filtered)
     carbon_ts$server("carbon_plot",sim_filtered)
     mats_drill$server("mats_plot",sim_filtered)
+
+    raw_outputs$server("dats",sim_dat=sim_dat)
 
   })
 

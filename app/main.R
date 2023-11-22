@@ -35,9 +35,9 @@ ui = function(id) {
                         param_browser$ui(ns("browser"))
                ),
 
-               tabPanel("Raw Data",
-                        raw_outputs$ui(ns("sim_outputs"))
-               ),
+#               tabPanel("Raw Data",
+#                        raw_outputs$ui(ns("sim_outputs"))
+#               ),
 
                tabPanel("Compare",
                         comparisons$ui(ns("compare"))
@@ -82,7 +82,7 @@ server = function(id) {
     dashboard$server("sim_dashboard",sim_dat=sim)
 
     # Raw Data tab
-    raw_outputs$server("sim_outputs",sim_dat=sim)
+    # raw_outputs$server("sim_outputs",sim_dat=sim)
 
     # Comparisons tab
     comparisons$server("compare",sim_dat=sim,params=params)

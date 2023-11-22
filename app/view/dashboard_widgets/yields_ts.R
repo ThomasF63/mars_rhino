@@ -33,7 +33,9 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_line(cum_yields, symbol="none") %>%
         #echarts4r$e_x_axis(t) %>%
         echarts4r$e_title("Total Yields","t/ha, cumulative") %>%
-        echarts4r$e_tooltip()
+        echarts4r$e_tooltip() %>%
+        echarts4r$e_datazoom(show=FALSE) %>%
+        echarts4r$e_group("grp")
     )
 
   })

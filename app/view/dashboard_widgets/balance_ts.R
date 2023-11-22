@@ -41,7 +41,9 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_legend(show=F) %>%
         #echarts4r$e_x_axis(t) %>%
         echarts4r$e_title("Monthly Balance","USD") %>%
-        echarts4r$e_tooltip()
+        echarts4r$e_tooltip() %>%
+        echarts4r$e_datazoom(x_index=0, type="slider") %>%
+        echarts4r$e_group("grp")
     )
 
   })

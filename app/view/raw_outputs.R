@@ -2,7 +2,10 @@
 
 box::use(
   DT[DTOutput,renderDT],
-  shiny[h3, moduleServer, NS, tagList],
+  shiny[h3, moduleServer, NS, tagList, selectInput, checkboxInput, checkboxGroupInput, reactive],
+  shinyWidgets[pickerInput],
+  rlang[...],
+  dplyr[...]
 )
 
 #' @export
@@ -11,6 +14,19 @@ ui <- function(id) {
 
   tagList(
     h3("Raw outputs"),
+
+    selectInput(ns("aggs"),
+                "Aggregate raw data by:",
+                choices=c("Month"="t",
+                          "Year"="year",
+                          "Cycle"="planting",
+                          "Whole Simulation"="scenario",
+                          "Crop"="crop"),
+                multiple=T),
+
+    # checkbox for total costs only
+    # and maybe to drop columns that are all 0
+
     DTOutput(ns("raw_dat"))
   )
 }
@@ -20,8 +36,22 @@ server <- function(id,sim_dat) {
 
   moduleServer(id, function(input, output, session) {
 
+    agged_dat = reactive({
+      if(is.null(input$aggs)) {return(sim_dat())}
+      else {
+        sim_dat() %>%
+          mutate(scenario="A",
+                 across(t:planting,as.factor)) %>%
+          group_by_at(vars(input$aggs)) %>%
+          summarise_if(is.numeric, sum, na.rm=T) %>%
+          # recalculate cumulative variables
+          return(.)
+        }
+      })
+
     # Eventually replace the DT button with a Shiny one, easier to customise and doesn't require client-side rendering
-    output$raw_dat = renderDT(sim_dat(), extensions = 'Buttons', rownames=T, server=F,
+    output$raw_dat = renderDT(agged_dat(),
+                              extensions = 'Buttons', rownames=T, server=F,
                               options = list(dom = "Blfrtip", buttons=c('colvis','csv')))
 
   })
