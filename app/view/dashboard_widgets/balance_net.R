@@ -1,4 +1,4 @@
-# app/view/dashboard_widgets/balance_ts.R
+# app/view/dashboard_widgets/balance_net.R
 
 box::use(
   dplyr[...],
@@ -19,10 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat,th,grp="grp") {
-  # should be possible to colour based on value but couldn't get it to work on first try
-  # https://echarts4r.john-coene.com/reference/e_visual_map
-
+server <- function(id,processed_sim_dat) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -36,27 +33,25 @@ server <- function(id,processed_sim_dat,th,grp="grp") {
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         group_by(t) %>%
         summarise(balance = sum(net_income,na.rm=T)) %>%
-        #mutate(t=as.factor(t)) %>%
+        mutate(cumulative_balance = cumsum(balance)) %>%
+        # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
+        # Use dplyr group_by rather than echarts group_by, latter causes problems
         echarts4r$e_charts(x = t) %>%
-        echarts4r$e_bar(balance) %>% #,symbol='none'
-        echarts4r$e_legend(show=F) %>%
+        echarts4r$e_bar(cumulative_balance,symbol='none') %>%
         echarts4r$e_visual_map(
           type="piecewise",
           show=FALSE,
-          right='5',
-          top='15%',
           pieces=list(
-            list(gt = th, color="green"),
-            list(lte = th, color="red")
+            list(gt = 0, color="green"),
+            list(lte = 0, color="red")
           )
         ) %>%
-        echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$t)) %>%
-        echarts4r$e_mark_line(data=list(yAxis=th), title="", symbol="none") %>%
-        echarts4r$e_title("Monthly Balance","USD, red below income threshold") %>%
+        echarts4r$e_legend(show=F) %>%
+        echarts4r$e_x_axis(min=0,max=301) %>%
+        echarts4r$e_title("Cumulative Balance","USD, red below $0") %>%
         echarts4r$e_tooltip() %>%
-        echarts4r$e_datazoom(x_index=0, type="slider") %>%
-        echarts4r$e_group(grp) %>%
-        echarts4r$e_connect_group(grp)
+        echarts4r$e_datazoom(show=FALSE) %>%
+        echarts4r$e_group("grp")
     )
 
   })

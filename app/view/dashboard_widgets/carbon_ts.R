@@ -32,10 +32,10 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_chart(x = t) %>%
         echarts4r$e_line(cum_carbon, symbol='none') %>%
         #echarts4r$e_x_axis(t) %>%
-        echarts4r$e_title("Total Carbon Storage","t/ha, cumulative") %>%
+        echarts4r$e_title("Carbon Storage","t/ha, cumulative") %>%
         echarts4r$e_tooltip() %>%
-        echarts4r$e_group("grp") %>%
-        echarts4r$e_connect_group("grp")
+        echarts4r$e_datazoom(show=FALSE) %>%
+        echarts4r$e_group("grp")
     )
 
   })

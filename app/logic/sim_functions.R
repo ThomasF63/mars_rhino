@@ -45,11 +45,13 @@ v_b = function(max_sz,k,a){
 #' includes mortality and the code for timber thinning
 #' the crop calendar is only needed to check for thinning rates in timber
 #' @export
-calc_densities = function(c,p,farm,crop_cal,crop_params,farm_layout){
+calc_densities = function(c,p,farm,crop_cal,crop_params,farm_layout,sim_params){
 
   # fetch relevant parameters
   cal_ = crop_cal %>% filter(crop==c & planting==p) %>% unnest(calendar)
   D_0_ = farm_layout %>% filter(crop==c & planting==p & parameter=="starting_density") %>% pull()
+  D_ref_ = crop_params %>% filter(crop==c & parameter=="reference_density") %>% pull()
+  plot_size_ = sim_params %>% filter(parameter=="plot_size_ha") %>% pull()
   k_ = crop_params %>% filter(crop==c & parameter=="mortality_rate") %>% pull()
   # the code for timber is '2', so if 2 is_timber_ is true
   is_timber_ = crop_params %>% filter(crop==c & parameter=="type") %>% pull() %>% {. == 2}
@@ -71,7 +73,8 @@ calc_densities = function(c,p,farm,crop_cal,crop_params,farm_layout){
       # finally, piping to head(-1) drops the final value, effectively lagging all values by 1 (so the impact on densities is seen in the month AFTER harvest)
       density = purrr::accumulate(timber_harvest, ~ .x - .x*k_ - coalesce(.x*.y,0), .init=D_0_) %>% head(-1),
       density = if_else(density < 0,0,density),
-      thinning = timber_harvest * density
+      thinning = timber_harvest * density,
+      area_ha = (density/D_ref_) * plot_size_
     )
 
   return(g)
@@ -113,7 +116,7 @@ calc_carbon = function(c,p,densities,crop_params,sim_params){
       bg_c = ag_c * r_s_r_,
       total_c = ag_c+bg_c
     ) %>%
-    select(-thinning,-time_since_thinning_)
+    select(-thinning,-thinning_,-time_since_thinning_)
 
   return(carbon)
 }
@@ -135,7 +138,7 @@ calc_yields = function(c,p,carbon_biomass,crop_cal,crop_params){
       # for timber trees, yield is calculated from biomass and density adjustment has already been applied
       # for crop plants, yield is directly provided in crop calendar but must be adjusted for densities
       yield = if(is_timber_) harvest * ag_c else harvest * density/D_ref_,
-      running_yield = cumsum(yield)
+      type = ifelse(is_timber_,'timber','crop')
     )
 
   return(y)
@@ -157,9 +160,9 @@ calc_revenue = function(c,p,yields,crop_params,sim_params){
   rev = yields %>%
     filter(crop == c & planting == p) %>%
     mutate(
-      revenue = yield * price_ * rp_usd_ * plot_size_ * expansion_factor_,
-      running_rev = cumsum(revenue)
-    )
+      revenue = yield * price_ * rp_usd_ * plot_size_ * expansion_factor_
+    ) %>%
+    select(-timber_harvest)
 
   return(rev)
 }
@@ -183,7 +186,7 @@ calc_labour = function(c,p,densities,crop_cal,crop_params,sim_params){
              # adjust all costs based on density
              ~ .x * density/D_ref_ * rp_usd_ * labour_price_day_rp_)
     ) %>%
-    select(-thinning,-timber_harvest)
+    select(-timber_harvest,-thinning,-area_ha)
 
   return(labour)
 }
@@ -205,7 +208,7 @@ calc_materials = function(c,p,densities,crop_cal,crop_params,sim_params){
              # adjust all costs based on density
              ~ .x * density/D_ref_ * rp_usd_)
     ) %>%
-    select(-thinning,-timber_harvest)
+    select(-timber_harvest,-thinning,-area_ha)
 
   return(materials)
 }

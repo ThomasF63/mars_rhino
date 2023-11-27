@@ -34,7 +34,8 @@ server <- function(id,params) {
       run_sim(scenario2$sim_params,
               scenario2$crop_params,
               scenario2$farm_layout,
-              params$crop_cals)
+              params$crop_cals,
+              scenario="Alternate")
     })
 
     return(sim2)

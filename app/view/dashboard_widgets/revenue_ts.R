@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat) {
+server <- function(id,processed_sim_dat,grp="grp") {
 
   moduleServer(id, function(input, output, session) {
 
@@ -33,7 +33,9 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_line(revenue) %>%
         #echarts4r$e_x_axis(t) %>%
         echarts4r$e_title("Revenue","USD - points show harvest events") %>%
-        echarts4r$e_tooltip()
+        echarts4r$e_tooltip() %>%
+        echarts4r$e_datazoom(show=FALSE) %>%
+        echarts4r$e_group(grp)
     )
 
   })

@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat) {
+server <- function(id,processed_sim_dat,grp="grp") {
 
   moduleServer(id, function(input, output, session) {
 
@@ -31,11 +31,11 @@ server <- function(id,processed_sim_dat) {
         mutate(cum_yields = cumsum(yield)) %>%
         echarts4r$e_chart(x = t) %>%
         echarts4r$e_line(cum_yields, symbol="none") %>%
-        #echarts4r$e_x_axis(t) %>%
-        echarts4r$e_title("Total Yields","t/ha, cumulative") %>%
+        echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$t)) %>%
+        echarts4r$e_title("Yields","t/ha, cumulative") %>%
         echarts4r$e_tooltip() %>%
         echarts4r$e_datazoom(show=FALSE) %>%
-        echarts4r$e_group("grp")
+        echarts4r$e_group(grp)
     )
 
   })

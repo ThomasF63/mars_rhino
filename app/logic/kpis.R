@@ -102,3 +102,28 @@ total_carbon = function(sim_results){
 }
 
 
+#### Function 8: Income threshold (USD) ####
+#' @export
+income_th_usd = function(sim_params){
+
+  monthly_rp = sim_params %>% filter(parameter=="monthly_income_threshold_rp") %>% pull()
+  rp_to_usd = sim_params %>% filter(parameter=="rp_to_usd") %>% pull()
+
+  th = monthly_rp*rp_to_usd
+
+  return(th)
+}
+
+
+#### Function 9: Average full time equivalents ####
+#' @export
+av_ftes = function(sim_results,sim_params){
+
+  # Labor is provided in USD equivalent, back calculate to time
+  labour_price_day_rp = sim_params %>% filter(parameter=="labour_price_day_rp") %>% pull()
+  rp_to_usd = sim_params %>% filter(parameter=="rp_to_usd") %>% pull()
+
+  result = mean(sim_results$labor_total) / (labour_price_day_rp * rp_to_usd)
+
+  return(result)
+}

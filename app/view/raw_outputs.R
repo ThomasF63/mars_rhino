@@ -16,11 +16,11 @@ ui <- function(id) {
     h3("Raw outputs"),
 
     selectInput(ns("aggs"),
-                "Aggregate raw data by:",
+                "Aggregate by:",
                 choices=c("Month"="t",
                           "Year"="year",
                           "Cycle"="planting",
-                          "Whole Simulation"="scenario",
+                          "Simulation"="scenario",
                           "Crop"="crop"),
                 multiple=T),
 
@@ -40,10 +40,9 @@ server <- function(id,sim_dat) {
       if(is.null(input$aggs)) {return(sim_dat())}
       else {
         sim_dat() %>%
-          mutate(scenario="A",
-                 across(t:planting,as.factor)) %>%
+          mutate(across(t:area_ha,as.factor)) %>%
           group_by_at(vars(input$aggs)) %>%
-          summarise_if(is.numeric, sum, na.rm=T) %>%
+          summarise(across(is.numeric, sum, na.rm=T),cumul_yield=cumsum(yield),cumul_rev=cumsum(revenue)) %>%
           # recalculate cumulative variables
           return(.)
         }

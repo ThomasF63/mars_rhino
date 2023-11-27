@@ -19,7 +19,7 @@ box::use(
 
 #' Run the simulation with a given parameter set
 #' @export
-run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals){
+run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals,scenario){
 
   #### INITIALIZATION ####
 
@@ -63,7 +63,7 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals){
     distinct() %>%
     mutate(
       density = purrr::map2(crop,planting,
-                            \(c,p) calc_densities(c,p,farm,crop_cals,crop_params,farm_layout))
+                            \(c,p) calc_densities(c,p,farm,crop_cals,crop_params,farm_layout,sim_params))
     ) %>%
     select(density) %>%
     unnest(density)
@@ -140,8 +140,11 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals){
         by=c("t","year","age","cycle","crop","planting","density")
       ) %>%
       mutate(
+        scenario=scenario,
         across(contains('mat_costs') | contains('labor_time'),
-               ~ replace_na(.x,0))
+               ~ replace_na(.x,0)),
+        mat_total = rowSums(across(contains('mat_costs'))),
+        labor_total = rowSums(across(contains('labor_time')))
       )
   )
 

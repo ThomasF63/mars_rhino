@@ -33,7 +33,6 @@ server <- function(id,sim_dat,sim2_dat) {
           total_costs = rowSums(across(contains('labor_time'))) + rowSums(across(contains('mat_costs'))),
           net_income = revenue - total_costs
         ) %>%
-        # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         group_by(t, scenario) %>%
         summarise(balance = sum(net_income,na.rm=T)) %>%

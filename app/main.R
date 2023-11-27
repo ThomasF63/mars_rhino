@@ -75,11 +75,12 @@ server = function(id) {
       run_sim(params$sim_params,
               params$crop_params,
               params$farm_layout,
-              params$crop_cals)
+              params$crop_cals,
+              scenario="Base")
       })
 
     # Dashboard tab
-    dashboard$server("sim_dashboard",sim_dat=sim)
+    dashboard$server("sim_dashboard",sim_dat=sim,sim_params=params$sim_params)
 
     # Raw Data tab
     # raw_outputs$server("sim_outputs",sim_dat=sim)
