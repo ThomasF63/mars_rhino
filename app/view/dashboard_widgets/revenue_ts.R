@@ -28,12 +28,12 @@ server <- function(id,processed_sim_dat,grp="grp") {
         # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         filter(revenue > 0) %>%
-        group_by(crop,planting) %>%
+        group_by(crop_planting) %>%
         echarts4r$e_chart(x = t) %>%
         echarts4r$e_line(revenue) %>%
         #echarts4r$e_x_axis(t) %>%
         echarts4r$e_title("Revenue","USD - points show harvest events") %>%
-        echarts4r$e_tooltip() %>%
+        echarts4r$e_tooltip(trigger="axis") %>%
         echarts4r$e_datazoom(show=FALSE) %>%
         echarts4r$e_group(grp)
     )

@@ -1,0 +1,13 @@
+oldname,tidyname
+lp,land preparation
+plant,crop planting
+ferti,fertilization
+wc,weed control
+pdc,pest and disease control
+prun,pruning
+harv,harvesting
+ph,post-harvest
+wc_manual,weed control (manual)
+wc_herbicide,weed control (herbicide)
+prun_pro,pruning (professional)
+prun_main,pruning (main)

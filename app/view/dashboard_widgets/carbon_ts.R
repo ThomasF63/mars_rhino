@@ -25,8 +25,8 @@ server <- function(id,processed_sim_dat) {
 
     output$chart = echarts4r$renderEcharts4r(
       processed_sim_dat() %>%
-        group_by(crop,planting) %>%
-        mutate(cum_carbon = cumsum(total_c)) %>%
+        group_by(crop_planting) %>%
+        mutate(cum_carbon = cumsum(c_total)) %>%
         # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         echarts4r$e_chart(x = t) %>%

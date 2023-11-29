@@ -4,9 +4,11 @@
 
 box::use(
   dplyr[...],
+  tibble[deframe],
   tidyr[pivot_longer],
   rlang[...], #parse_expr, and !! but not sure how to pick just latter
   shiny[h3, moduleServer, NS, tagList],
+  utils[read.csv],
   echarts4r,
 )
 box::use(
@@ -23,37 +25,50 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat,cost_type) {
+server <- function(id,sim_dat,cost_type) {
+
 
   moduleServer(id, function(input, output, session) {
 
+    if(cost_type=='materials'){
+      prefix="mat_costs_"
+      title="Material costs"
+      suffix='_m'
+    } else if(cost_type=='labor'){
+      prefix="labor_time_"
+      title="Labor costs"
+      suffix='_l'
+    }
+
+    tidynames = read.csv("app/data/column_names_crosswalk.csv") %>%
+      mutate(oldname = paste0(prefix,oldname)) %>%
+      relocate(tidyname) %>%
+      deframe()
 
     build_expression <- function(sim_dat){
 
-      if(cost_type=='materials'){
-        prefix="mat_costs_"
-        title="Material costs"
-      } else if(cost_type=='labor'){
-        prefix="labor_time_"
-        title="Labor costs"
-      }
+      # Get lookup table for tidier column names
 
-      activities = sim_dat %>%
+      activities = sim_dat() %>%
         select(matches(!!prefix)) %>%
+        rename_with(tolower) %>%
+        rename(any_of(tidynames)) %>%
         colnames()
 
-      series = paste0('echarts4r$e_bar(',activities,',stack="stk")')
+      series = paste0('echarts4r$e_bar(`',activities,'`,stack="stk")')
 
       beginning = c(
-        'processed_sim_dat()',
-        'group_by(crop,planting)',
+        'sim_dat()',
+        paste0('rename_with(tolower, starts_with("',prefix,'"))'),
+        'rename(any_of(tidynames))',
         'mutate(t=as.character(t))',
+        'group_by(crop_planting)',
         'echarts4r$e_chart(x=t, timeline=T)'
       )
       end = c('echarts4r$e_legend(type="scroll",top=30)',
-              'echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$t))',
+              'echarts4r$e_x_axis(min=0,max=max(sim_dat()$t))',
               paste0('echarts4r$e_title("',title,'","")'),
-              'echarts4r$e_tooltip()',
+              'echarts4r$e_tooltip(trigger="axis")',
               'echarts4r$e_datazoom(show=FALSE)',
               'echarts4r$e_group("grp")')
 
@@ -74,7 +89,7 @@ server <- function(id,processed_sim_dat,cost_type) {
 
     output$chart = echarts4r$renderEcharts4r(
       eval(build_pipeline(
-        build_expression(processed_sim_dat())
+        build_expression(sim_dat())
         ))
     )
 

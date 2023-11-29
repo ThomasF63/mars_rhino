@@ -39,8 +39,8 @@ ui <- function(id) {
         value_box(title="Months to Profit",value=textOutput(ns("time_to_profit_A")),p("Base Scenario"),style='background-color: #228c22!important;'),
         value_box(title="",value=textOutput(ns("time_to_profit_B")),p("Alt. Scenario"),style='background-color: #228c22!important;'),
 
-        value_box(title="Simulation Duration",value=textOutput(ns("sim_length_A")),p("Base Scenario"),style='background-color: #FDD071!important;'),
-        value_box(title="",value=textOutput(ns("sim_length_B")),p("Alt. Scenario"),style='background-color: #FDD071!important;')
+        value_box(title="Simulation Duration",value=textOutput(ns("sim_length_A")),p("Base Scenario"),style='background-color: #F58216!important;'),
+        value_box(title="",value=textOutput(ns("sim_length_B")),p("Alt. Scenario"),style='background-color: #F58216!important;')
 
       ),
 

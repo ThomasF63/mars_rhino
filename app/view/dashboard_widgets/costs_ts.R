@@ -27,7 +27,7 @@ server <- function(id,processed_sim_dat) {
       processed_sim_dat() %>%
         # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
         # Use dplyr group_by rather than echarts group_by, latter causes problems
-        group_by(crop,planting) %>%
+        group_by(crop_planting) %>%
         mutate(
           total_labor = rowSums(across(contains('labor_time')))
         ) %>%

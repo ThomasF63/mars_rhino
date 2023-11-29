@@ -20,7 +20,7 @@ box::use(
   app/view/dashboard_widgets/density_ts,
   app/view/dashboard_widgets/carbon_ts,
   app/view/dashboard_widgets/costs_drill,
-  app/view/dashboard_widgets/farm_layout
+  app/view/dashboard_widgets/farm_layout,
 )
 
 #' @export

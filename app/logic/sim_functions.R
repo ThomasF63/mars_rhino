@@ -114,7 +114,7 @@ calc_carbon = function(c,p,densities,crop_params,sim_params){
     mutate(
       ag_c = v_b(max_bm_,k_,age) * c_content_ * plot_size_ * (density/D_ref_) + if(regrowth_on_) cumsum(regrowth) else 0,
       bg_c = ag_c * r_s_r_,
-      total_c = ag_c+bg_c
+      c_total = ag_c+bg_c
     ) %>%
     select(-thinning,-thinning_,-time_since_thinning_)
 

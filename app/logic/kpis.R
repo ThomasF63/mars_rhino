@@ -96,7 +96,7 @@ months_to_profit = function(sim_results){
 #' @export
 total_carbon = function(sim_results){
 
-  result = sum(sim_results$total_c)
+  result = sum(sim_results$c_total)
 
   return(result)
 }

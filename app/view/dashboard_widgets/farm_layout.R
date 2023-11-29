@@ -34,11 +34,12 @@ server <- function(id,processed_sim_dat) {
 
     output$chart = echarts4r$renderEcharts4r(
       processed_sim_dat() %>%
-        filter(t==1) %>%
-        mutate(crop_planting = paste0(crop,planting,collapse='-'),
-               layout = ifelse(type=='timber',density,area_ha)) %>%
+        group_by(crop_planting) %>%
+        filter(row_number()==1) %>%
+        ungroup() %>%
+        mutate(layout = ifelse(type=='timber',density,area_ha)) %>%
         #group_by(type) %>%
-        echarts4r$e_charts(crop) %>%
+        echarts4r$e_charts(crop_planting) %>%
         echarts4r$e_pie(layout, radius = c("50%", "70%")) %>%
         echarts4r$e_title("Farm Layout","Food crops in ha, Timber in trees/ha") %>%
         echarts4r$e_tooltip() %>%

@@ -145,8 +145,18 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals,scenario){
                ~ replace_na(.x,0)),
         mat_total = rowSums(across(contains('mat_costs'))),
         labor_total = rowSums(across(contains('labor_time')))
-      )
-  )
+      ) %>%
+      rename(
+        c_aboveground = ag_c,
+        c_belowground = bg_c
+      ) %>%
+      relocate(scenario) %>%
+      group_by(crop) %>%
+      mutate(crop_planting_ = n_distinct(planting) > 1) %>%
+      ungroup() %>%
+      mutate(crop_planting = if_else(crop_planting_,paste0(crop,'_',planting),crop)) %>%
+      select(-crop_planting_)
 
+  )
 
 }

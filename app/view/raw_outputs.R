@@ -24,9 +24,6 @@ ui <- function(id) {
                           "Crop"="crop"),
                 multiple=T),
 
-    # checkbox for total costs only
-    # and maybe to drop columns that are all 0
-
     DTOutput(ns("raw_dat"))
   )
 }
@@ -49,7 +46,7 @@ server <- function(id,sim_dat) {
       })
 
     # Eventually replace the DT button with a Shiny one, easier to customise and doesn't require client-side rendering
-    output$raw_dat = renderDT(agged_dat(),
+    output$raw_dat = renderDT(agged_dat() %>% select(-any_of('crop_planting')),
                               extensions = 'Buttons', rownames=T, server=F,
                               options = list(dom = "Blfrtip", buttons=c('colvis','csv')))
 
