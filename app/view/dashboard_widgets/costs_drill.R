@@ -55,8 +55,6 @@ server <- function(id,sim_dat,cost_type) {
         rename(any_of(tidynames)) %>%
         colnames()
 
-      series = paste0('echarts4r$e_bar(`',activities,'`,stack="stk")')
-
       beginning = c(
         'sim_dat()',
         paste0('rename_with(tolower, starts_with("',prefix,'"))'),
@@ -65,12 +63,14 @@ server <- function(id,sim_dat,cost_type) {
         'group_by(crop_planting)',
         'echarts4r$e_chart(x=t, timeline=T)'
       )
+
+      series = paste0('echarts4r$e_bar(`',activities,'`,stack="stk")')
+
       end = c('echarts4r$e_legend(type="scroll",top=30)',
               'echarts4r$e_x_axis(min=0,max=max(sim_dat()$t))',
               paste0('echarts4r$e_title("',title,'","")'),
-              'echarts4r$e_tooltip(trigger="axis")',
-              'echarts4r$e_datazoom(show=FALSE)',
-              'echarts4r$e_group("grp")')
+              'echarts4r$e_tooltip(trigger="axis")')
+              #'echarts4r$e_datazoom()')
 
       return(c(beginning,series,end))
     }

@@ -82,11 +82,12 @@ months_to_profit = function(sim_results){
       net_income = revenue - total_costs
     ) %>%
     group_by(t) %>%
-    summarise(cumulative_total_income = cumsum(net_income)) %>%
-    filter(cumulative_total_income > 0) %>%
+    summarise(balance = sum(net_income,na.rm=T)) %>%
+    mutate(cumulative_balance = cumsum(balance)) %>%
+    filter(cumulative_balance > 0) %>%
     arrange(t)
 
-  result = temp$cumulative_total_income[1]
+  result = temp$t[1]
 
   return(result)
 }

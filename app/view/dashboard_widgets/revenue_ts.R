@@ -31,7 +31,7 @@ server <- function(id,processed_sim_dat,grp="grp") {
         group_by(crop_planting) %>%
         echarts4r$e_chart(x = t) %>%
         echarts4r$e_line(revenue) %>%
-        #echarts4r$e_x_axis(t) %>%
+        echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$t)) %>%
         echarts4r$e_title("Revenue","USD - points show harvest events") %>%
         echarts4r$e_tooltip(trigger="axis") %>%
         echarts4r$e_datazoom(show=FALSE) %>%

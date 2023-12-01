@@ -20,7 +20,9 @@ box::use(
   app/view/dashboard_widgets/density_ts,
   app/view/dashboard_widgets/carbon_ts,
   app/view/dashboard_widgets/costs_drill,
-  app/view/dashboard_widgets/farm_layout,
+  app/view/dashboard_widgets/costs_agg,
+  app/view/dashboard_widgets/ftes_ts,
+  app/view/dashboard_widgets/farm_layout
 )
 
 #' @export
@@ -28,9 +30,9 @@ ui <- function(id) {
   ns <- NS(id)
 
   navset_tab(
-  #page_fluid(
+
     nav_panel(
-      title="Main",
+      title="Summary",
 
       # Later on handle KPI panels with a kpi module
       layout_columns(
@@ -45,20 +47,59 @@ ui <- function(id) {
       br(),
 
       layout_column_wrap(
-        width=1/3,
-        farm_layout$ui(ns("layout")),
-        balance_ts$ui(ns("balance_plot")),
+        width=1,
+        balance_net$ui(ns("net_balance_plot_summary"))
+      ),
+      layout_column_wrap(
+        width=1/2,
+        farm_layout$ui(ns("layout_summary")),
+        carbon_ts$ui(ns("carbon_plot_summary"))
+
+      )
+    ),
+
+
+    nav_panel(
+      title="Financials",
+
+      br(),
+
+      layout_column_wrap(
+        width=1/2,
         balance_net$ui(ns("net_balance_plot")),
+        balance_ts$ui(ns("balance_plot")),
 
         revenue_ts$ui(ns("revenue_plot")),
-        costs_drill$ui(ns("mats_plot")),
-        costs_drill$ui(ns("labor_plot")),
+        ftes_ts$ui(ns("fte_plot")),
+
+        costs_agg$ui(ns("mat_aggregate")),
+        costs_agg$ui(ns("labor_aggregate")),
+      )
+    ),
+
+
+    nav_panel(
+      title="Detailed Costs",
+
+      br(),
+      layout_column_wrap(width=1,costs_drill$ui(ns("mats_plot"))),
+      br(),
+      layout_column_wrap(width=1,costs_drill$ui(ns("labor_plot")))
+    ),
+
+
+    nav_panel(
+      title="Agricultural",
+
+      br(),
+
+      layout_column_wrap(
+        width=1/2,
+        yields_ts$ui(ns("yield_plot")),
+        farm_layout$ui(ns("layout")),
 
         density_ts$ui(ns("density_plot")),
-        yields_ts$ui(ns("yield_plot")),
-        carbon_ts$ui(ns("carbon_plot")),
-
-
+        carbon_ts$ui(ns("carbon_plot"))
 
       )
     ),
@@ -71,7 +112,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,sim_dat,sim_params) {
+server <- function(id,sim_dat,params) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -82,21 +123,43 @@ server <- function(id,sim_dat,sim_params) {
     output$income = renderText( kpis$total_income(sim_filtered()) )
     output$carbon = renderText( kpis$total_carbon(sim_filtered()) )
     output$time_to_profit = renderText( kpis$months_to_profit(sim_filtered()) )
-    output$ftes = renderText( kpis$av_ftes(sim_filtered(), sim_params) )
+    output$ftes = renderText( kpis$av_ftes(sim_filtered(), params$sim_params) )
     output$sim_length = renderText( kpis$total_months(sim_filtered()) )
 
-    farm_layout$server("layout",sim_filtered)
-    balance_ts$server("balance_plot",sim_filtered, th=kpis$income_th_usd(sim_params))
-    balance_net$server("net_balance_plot",sim_filtered)
+    # summary tab
+    balance_net$server("net_balance_plot_summary",sim_filtered,show_timeline=T)
+    farm_layout$server("layout_summary",sim_filtered)
+    carbon_ts$server("carbon_plot_summary",sim_filtered)
+
+    # financials tab
+    balance_net$server("net_balance_plot",sim_filtered,show_timeline=T)
+    balance_ts$server("balance_plot",sim_filtered, th=kpis$income_th_usd(params$sim_params))
 
     revenue_ts$server("revenue_plot",sim_filtered)
+    ftes_ts$server("fte_plot",sim_filtered, params$sim_params)
+
+    costs_agg$server("mat_aggregate",sim_filtered,cost_type="materials")
+    costs_agg$server("labor_aggregate",sim_filtered,cost_type="labor")
+
+    # costs tab
     costs_drill$server("mats_plot",sim_filtered,cost_type="materials")
     costs_drill$server("labor_plot",sim_filtered,cost_type="labor")
 
+    # agricultural tab
+    yields_ts$server("yield_plot",sim_filtered,show_timeline=T)
+    farm_layout$server("layout",sim_filtered)
     density_ts$server("density_plot",sim_filtered)
-    yields_ts$server("yield_plot",sim_filtered)
     carbon_ts$server("carbon_plot",sim_filtered)
 
+
+
+
+
+
+
+
+
+    # data tab
     raw_outputs$server("dats",sim_dat=sim_dat)
 
   })

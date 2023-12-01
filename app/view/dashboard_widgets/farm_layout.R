@@ -20,7 +20,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat) {
+server <- function(id,processed_sim_dat,grp="grp") {
 
   moduleServer(id, function(input, output, session) {
 
@@ -43,7 +43,8 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_pie(layout, radius = c("50%", "70%")) %>%
         echarts4r$e_title("Farm Layout","Food crops in ha, Timber in trees/ha") %>%
         echarts4r$e_tooltip() %>%
-        echarts4r$e_group("grp")
+        echarts4r$e_group(grp) %>%
+        echarts4r$e_connect_group(grp)
     )
 
   })

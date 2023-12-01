@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat) {
+server <- function(id,processed_sim_dat,grp="grp",show_timeline=F) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -47,11 +47,12 @@ server <- function(id,processed_sim_dat) {
           )
         ) %>%
         echarts4r$e_legend(show=F) %>%
-        echarts4r$e_x_axis(min=0,max=301) %>%
+        echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$t)) %>%
         echarts4r$e_title("Cumulative Balance","USD, red below $0") %>%
-        echarts4r$e_tooltip() %>%
-        echarts4r$e_datazoom(show=FALSE) %>%
-        echarts4r$e_group("grp")
+        echarts4r$e_tooltip(trigger="axis") %>%
+        echarts4r$e_datazoom(show=show_timeline) %>%
+        echarts4r$e_group(grp) %>%
+        echarts4r$e_connect_group(grp)
     )
 
   })

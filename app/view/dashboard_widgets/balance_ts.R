@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat,th,grp="grp") {
+server <- function(id,processed_sim_dat,th,grp="grp",show_timeline=F) {
   # should be possible to colour based on value but couldn't get it to work on first try
   # https://echarts4r.john-coene.com/reference/e_visual_map
 
@@ -53,8 +53,8 @@ server <- function(id,processed_sim_dat,th,grp="grp") {
         echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$t)) %>%
         echarts4r$e_mark_line(data=list(yAxis=th), title="", symbol="none") %>%
         echarts4r$e_title("Monthly Balance","USD, red below income threshold") %>%
-        echarts4r$e_tooltip() %>%
-        echarts4r$e_datazoom(x_index=0, type="slider") %>%
+        echarts4r$e_tooltip(trigger="axis") %>%
+        echarts4r$e_datazoom(show=show_timeline) %>%
         echarts4r$e_group(grp) %>%
         echarts4r$e_connect_group(grp)
     )

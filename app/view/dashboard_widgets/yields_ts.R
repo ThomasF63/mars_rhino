@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat,grp="grp") {
+server <- function(id,processed_sim_dat,show_timeline=F,grp="grp") {
 
   moduleServer(id, function(input, output, session) {
 
@@ -34,7 +34,7 @@ server <- function(id,processed_sim_dat,grp="grp") {
         echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$t)) %>%
         echarts4r$e_title("Yields","t/ha, cumulative") %>%
         echarts4r$e_tooltip() %>%
-        echarts4r$e_datazoom(show=FALSE) %>%
+        echarts4r$e_datazoom(show=show_timeline) %>%
         echarts4r$e_group(grp)
     )
 

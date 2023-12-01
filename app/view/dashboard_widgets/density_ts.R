@@ -30,7 +30,7 @@ server <- function(id,processed_sim_dat) {
         group_by(crop_planting) %>%
         echarts4r$e_chart(x = t) %>%
         echarts4r$e_line(density, symbol='none') %>%
-        #echarts4r$e_x_axis(t) %>%
+        echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$t)) %>%
         echarts4r$e_title("Crop Density","Plants/ha") %>%
         echarts4r$e_tooltip() %>%
         echarts4r$e_datazoom(show=FALSE) %>%
