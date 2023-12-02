@@ -29,9 +29,9 @@ server <- function(id,processed_sim_dat,show_timeline=F,grp="grp") {
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         group_by(crop_planting) %>%
         mutate(cum_yields = cumsum(yield)) %>%
-        echarts4r$e_chart(x = t) %>%
+        echarts4r$e_chart(x = timestep) %>%
         echarts4r$e_line(cum_yields, symbol="none") %>%
-        echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$t)) %>%
+        echarts4r$e_x_axis(min=1,max=max(processed_sim_dat()$timestep)) %>%
         echarts4r$e_title("Yields","t/ha, cumulative") %>%
         echarts4r$e_tooltip() %>%
         echarts4r$e_datazoom(show=show_timeline) %>%

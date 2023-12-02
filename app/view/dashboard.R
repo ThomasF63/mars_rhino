@@ -7,12 +7,13 @@
 
 box::use(
   dplyr[...],
-  shiny[h3, br, moduleServer, NS, fluidPage, fluidRow, reactive, renderText, textOutput],
+  shiny[h3, br, moduleServer, NS, fluidPage, fluidRow, reactive, renderText, textOutput, tagList],
   bslib[page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
 )
 box::use(
   app/logic/kpis,
   app/view/raw_outputs,
+  app/view/dashboard_widgets/wrangle_outputs,
   app/view/dashboard_widgets/balance_ts,
   app/view/dashboard_widgets/balance_net,
   app/view/dashboard_widgets/revenue_ts,
@@ -43,6 +44,8 @@ ui <- function(id) {
         value_box(title="Average FTEs",value=textOutput(ns("ftes"))),
         value_box(title="Simulation Duration",value=textOutput(ns("sim_length")))
       ),
+
+      wrangle_outputs$ui(ns("wrangling")),
 
       br(),
 
@@ -117,18 +120,18 @@ server <- function(id,sim_dat,params) {
   moduleServer(id, function(input, output, session) {
 
     # Apply filters to simoutput
-    sim_filtered = reactive({ sim_dat() }) # later replace with module output
+    sim_filtered = wrangle_outputs$server("wrangling",sim_dat()) # later replace with module output
 
     # Later on handle KPI panels with a kpi module to hide this away
-    output$income = renderText( kpis$total_income(sim_filtered()) )
-    output$carbon = renderText( kpis$total_carbon(sim_filtered()) )
-    output$time_to_profit = renderText( kpis$months_to_profit(sim_filtered()) )
-    output$ftes = renderText( kpis$av_ftes(sim_filtered(), params$sim_params) )
-    output$sim_length = renderText( kpis$total_months(sim_filtered()) )
+    output$income = renderText( kpis$total_income(sim_dat()) )
+    output$carbon = renderText( kpis$total_carbon(sim_dat()) )
+    output$time_to_profit = renderText( kpis$months_to_profit(sim_dat()) )
+    output$ftes = renderText( kpis$av_ftes(sim_dat(), params$sim_params) )
+    output$sim_length = renderText( kpis$total_months(sim_dat()) )
 
     # summary tab
     balance_net$server("net_balance_plot_summary",sim_filtered,show_timeline=T)
-    farm_layout$server("layout_summary",sim_filtered)
+    farm_layout$server("layout_summary",sim_dat)
     carbon_ts$server("carbon_plot_summary",sim_filtered)
 
     # financials tab
@@ -147,7 +150,7 @@ server <- function(id,sim_dat,params) {
 
     # agricultural tab
     yields_ts$server("yield_plot",sim_filtered,show_timeline=T)
-    farm_layout$server("layout",sim_filtered)
+    farm_layout$server("layout",sim_dat)
     density_ts$server("density_plot",sim_filtered)
     carbon_ts$server("carbon_plot",sim_filtered)
 
@@ -160,6 +163,7 @@ server <- function(id,sim_dat,params) {
 
 
     # data tab
+    # note we input sim_dat directly, not the filtered data
     raw_outputs$server("dats",sim_dat=sim_dat)
 
   })

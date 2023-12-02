@@ -60,6 +60,7 @@ server = function(id) {
     params = reactiveValues(sim_params = base_params$sim_params,
                             crop_params = base_params$crop_params,
                             farm_layout = base_params$farm_layout,
+                            cal_lookup = base_params$cal_lookup,
                             crop_cals = base_cals)
 
     # Now make them edit-able

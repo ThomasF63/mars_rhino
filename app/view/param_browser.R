@@ -5,7 +5,8 @@
 
 box::use(
   DT[DTOutput,renderDT,editData],
-  shiny[h3, moduleServer, NS, tagList, selectInput, observeEvent],
+  shiny[h3, moduleServer, NS, tagList, selectInput, observeEvent, downloadButton, downloadHandler],
+  writexl[write_xlsx]
 )
 box::use(
 )
@@ -15,12 +16,15 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
+
     h3("Double-click to edit table cells"),
     selectInput(ns("param_select"),"Choose parameter set:",
                 c("Simulation Controls"="sim_params",
                   "Crop Globals"="crop_params",
                   "Farm Layout"="farm_layout")),
-    DTOutput(ns("browser"))
+    DTOutput(ns("browser")),
+
+    downloadButton(ns("param_export"),"Export parameters")
   )
 }
 
@@ -42,6 +46,17 @@ server <- function(id,params) {
     observeEvent(input$browser_cell_edit, {
       params[[input$param_select]] = editData(params[[input$param_select]], input$browser_cell_edit, 'browser')
     })
+
+    output$param_export = downloadHandler(
+      filename = "custom_parameters.xlsx",
+      contentType="application/xlsx",
+      content = function(file) {
+        write_xlsx(list(simulation_control = params$sim_params,
+                        global_crop_parameters = params$crop_params,
+                        farm_layout = params$farm_layout,
+                        crop_sheet_lookup = params$cal_lookup),file)
+      }
+    )
 
     return(params)
 

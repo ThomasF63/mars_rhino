@@ -20,7 +20,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,processed_sim_dat,grp="grp") {
+server <- function(id,sim_dat,grp="grp") {
 
   moduleServer(id, function(input, output, session) {
 
@@ -33,7 +33,7 @@ server <- function(id,processed_sim_dat,grp="grp") {
 
 
     output$chart = echarts4r$renderEcharts4r(
-      processed_sim_dat() %>%
+      sim_dat() %>%
         group_by(crop_planting) %>%
         filter(row_number()==1) %>%
         ungroup() %>%

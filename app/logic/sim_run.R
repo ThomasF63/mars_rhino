@@ -141,6 +141,7 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals,scenario){
       ) %>%
       mutate(
         scenario=scenario,
+        timestep=t,
         across(contains('mat_costs') | contains('labor_time'),
                ~ replace_na(.x,0)),
         mat_total = rowSums(across(contains('mat_costs'))),
@@ -154,7 +155,7 @@ run_sim = function(sim_params,crop_params,farm_layout,all_crop_cals,scenario){
       group_by(crop) %>%
       mutate(crop_planting_ = n_distinct(planting) > 1) %>%
       ungroup() %>%
-      mutate(crop_planting = if_else(crop_planting_,paste0(crop,'_',planting),crop)) %>%
+      mutate(crop_planting = if_else(crop_planting_,paste0(crop,'_',planting),crop),) %>%
       select(-crop_planting_)
 
   )

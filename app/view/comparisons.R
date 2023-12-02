@@ -79,6 +79,7 @@ server <- function(id,sim_dat,params) {
   moduleServer(id, function(input, output, session) {
 
     # reactive on file upload: set sim-2 stuff
+
     sim_2 = import_params$server("importer",params)
 
     req(sim_2)

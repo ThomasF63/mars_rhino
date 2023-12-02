@@ -34,11 +34,11 @@ server <- function(id,sim_dat,sim_params,grp="grp") {
       sim_dat() %>%
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         mutate(ftes = labor_total / (labour_price_day_rp() * rp_to_usd()),
-               t=as.character(t)) %>%
+               timestep=as.character(timestep)) %>%
         group_by(crop_planting) %>%
-        echarts4r$e_chart(x = t) %>%
+        echarts4r$e_chart(x = timestep) %>%
         echarts4r$e_bar(ftes,stack="stk") %>%
-        echarts4r$e_x_axis(min=0,max=max(sim_dat()$t)) %>%
+        echarts4r$e_x_axis(min=0,max=max(sim_dat()$timestep)) %>%
         echarts4r$e_title("Full time equivalents","1 FTE = 40h per week") %>%
         echarts4r$e_tooltip(trigger="axis") %>%
         echarts4r$e_datazoom(show=FALSE) %>%

@@ -38,7 +38,7 @@ server <- function(id,processed_sim_dat,cost_type,grp="grp") {
         # Use dplyr group_by rather than echarts group_by, latter causes problems
         mutate(selected_cost = !!sym(series)) %>%
         group_by(crop_planting) %>%
-        echarts4r$e_chart(x = t) %>%
+        echarts4r$e_chart(x = timestep) %>%
         echarts4r$e_line(selected_cost) %>%
         #echarts4r$e_x_axis(t) %>%
         echarts4r$e_title(title,"USD, activities aggregated") %>%

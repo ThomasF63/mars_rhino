@@ -29,9 +29,9 @@ server <- function(id,processed_sim_dat,grp="grp") {
         mutate(cum_carbon = cumsum(c_total)) %>%
         # Doesn't have easy ways to ignore NAs when connecting lines so just filter out 0s
         # Use dplyr group_by rather than echarts group_by, latter causes problems
-        echarts4r$e_chart(x = t) %>%
+        echarts4r$e_chart(x = timestep) %>%
         echarts4r$e_line(cum_carbon, symbol='none') %>%
-        echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$t)) %>%
+        echarts4r$e_x_axis(min=0,max=max(processed_sim_dat()$timestep)) %>%
         echarts4r$e_title("Carbon Storage","t/ha, cumulative") %>%
         echarts4r$e_tooltip() %>%
         echarts4r$e_datazoom(show=FALSE) %>%

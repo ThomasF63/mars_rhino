@@ -14,7 +14,7 @@ get_params = function(path){
     sim_params = read_excel(path,sheet="simulation_control"),
     crop_params = read_excel(path,sheet="crop_global_parameters"),
     farm_layout = read_excel(path,sheet="farm_layout"),
-    cal_lookup = read_excel(path,sheet="crop sheet lookup")
+    cal_lookup = read_excel(path,sheet="crop_sheet_lookup")
   )
   return(output)
 }

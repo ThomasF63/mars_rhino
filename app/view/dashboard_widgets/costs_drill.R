@@ -59,15 +59,15 @@ server <- function(id,sim_dat,cost_type) {
         'sim_dat()',
         paste0('rename_with(tolower, starts_with("',prefix,'"))'),
         'rename(any_of(tidynames))',
-        'mutate(t=as.character(t))',
+        'mutate(timestep=as.character(timestep))',
         'group_by(crop_planting)',
-        'echarts4r$e_chart(x=t, timeline=T)'
+        'echarts4r$e_chart(x=timestep, timeline=T)'
       )
 
       series = paste0('echarts4r$e_bar(`',activities,'`,stack="stk")')
 
       end = c('echarts4r$e_legend(type="scroll",top=30)',
-              'echarts4r$e_x_axis(min=0,max=max(sim_dat()$t))',
+              'echarts4r$e_x_axis(min=0,max=max(sim_dat()$timestep))',
               paste0('echarts4r$e_title("',title,'","")'),
               'echarts4r$e_tooltip(trigger="axis")')
               #'echarts4r$e_datazoom()')
