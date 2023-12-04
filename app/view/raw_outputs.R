@@ -46,7 +46,7 @@ server <- function(id,sim_dat) {
       })
 
     # Eventually replace the DT button with a Shiny one, easier to customise and doesn't require client-side rendering
-    output$raw_dat = renderDT(agged_dat() %>% select(-any_of('crop_planting','timestep')),
+    output$raw_dat = renderDT(agged_dat() %>% select(-any_of(c('crop_planting','timestep'))),
                               extensions = 'Buttons', rownames=T, server=F,
                               options = list(dom = "Blfrtip", buttons=c('colvis','csv')))
 

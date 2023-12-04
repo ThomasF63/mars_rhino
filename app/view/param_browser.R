@@ -5,10 +5,11 @@
 
 box::use(
   DT[DTOutput,renderDT,editData],
-  shiny[h3, moduleServer, NS, tagList, selectInput, observeEvent, downloadButton, downloadHandler],
+  shiny[h3, br, moduleServer, NS, tagList, selectInput, observeEvent, downloadButton, downloadHandler, fileInput, reactiveValues, observe],
   writexl[write_xlsx]
 )
 box::use(
+  app/logic/file_io[get_params],
 )
 
 #' @export
@@ -24,7 +25,12 @@ ui <- function(id) {
                   "Farm Layout"="farm_layout")),
     DTOutput(ns("browser")),
 
-    downloadButton(ns("param_export"),"Export parameters")
+    downloadButton(ns("param_export"),"Export parameters"),
+
+    br(),br(),
+
+    fileInput(ns("param_import"), "Import an existing parameter file",
+              multiple = F, accept = c(".xlsx"))
   )
 }
 
@@ -33,6 +39,19 @@ server <- function(id,params) {
 
   moduleServer(id, function(input, output, session) {
     # params enters via main as a reactiveValues
+
+
+    observe({
+
+      if(!is.null(input$param_import)) {
+        new_params = get_params(input$param_import$datapath)
+        params$sim_params = new_params$sim_params
+        params$crop_params = new_params$crop_params
+        params$farm_layout = new_params$farm_layout
+        params$cal_lookup = new_params$cal_lookup
+      }
+
+    })
 
     # selectinput list as reactive instead (fetch names from params rather than hardcode)
     # discuss w tom whether or not (and how) to handle crop cals
