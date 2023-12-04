@@ -27,8 +27,8 @@ The repo is structured as follows:
  - **raw_outputs.R** module for the raw outputs tab.
 - **/app/data/** contains the raw data (crop calendars and parameterisation files) used as the default parameter set on app load.
 
-## Setup
+## Other
 
-Rhino recommends you [install node.js](https://nodejs.org/en/download) for some core functionality, although strictly speaking it's not required.
+Rhino recommends you [install node.js](https://nodejs.org/en/download) for some core functionality, although currently it isn't being used by the app and isn't required.
 
 Be aware that on Windows machines, the Chocolatey stage of the installation (in Powershell) is notorious for providing warnings and then appearing to hang. Just leave it, it can appear frozen for >20 mins but is actually still installing.
