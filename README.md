@@ -1,3 +1,13 @@
+# Quickstart
+
+To run locally, you need to:
+- Make sure R is up-to-date.
+- Install rtools [from here](https://cran.r-project.org/bin/windows/Rtools/), as renv will need to compile some libraries.
+- Obtain a local version of the repo (e.g., using **New Project** > **Version Control** in RStudio) and open it.
+- renv will bootstrap itself into the local environment without requiring a manual install, just activate it with `renv::activate()`.
+- Build the local environment with `renv::restore()`. This will take 15-30 mins for renv to download and install all required libraries.
+- In future, simply open the project and launch the app with `rhino::app()`.
+
 # Mars Rhino Dashboard - Overview
 
 This repository contains the Shiny app built in the Rhino framework for Thomas Fungenzi at Mars by EcoData.
