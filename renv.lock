@@ -369,6 +369,18 @@
       ],
       "Hash": "f61dbaec772ccd2e17705c1e872e9e7c"
     },
+    "checkmate": {
+      "Package": "checkmate",
+      "Version": "2.3.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "backports",
+        "utils"
+      ],
+      "Hash": "ed4275b13c6ab74b89a31def0b6bf835"
+    },
     "cli": {
       "Package": "cli",
       "Version": "3.6.1",
@@ -1832,6 +1844,20 @@
         "utils"
       ],
       "Hash": "e418b532e9bb4eb22a714b9a9f1acee7"
+    },
+    "shinydisconnect": {
+      "Package": "shinydisconnect",
+      "Version": "0.1.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "checkmate",
+        "glue",
+        "htmltools",
+        "shiny"
+      ],
+      "Hash": "5c16e89e3737c836858979aee93e3c33"
     },
     "shinymanager": {
       "Package": "shinymanager",

@@ -8,7 +8,7 @@
 box::use(
   dplyr[...],
   shiny[h3, br, moduleServer, NS, fluidPage, fluidRow, reactive, renderText, textOutput, tagList],
-  bslib[sidebar,page_sidebar,page_navbar,page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
+  bslib[navset_card_tab,card,sidebar,page_sidebar,page_navbar,page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
 )
 box::use(
   app/logic/kpis,
@@ -30,13 +30,11 @@ box::use(
 ui <- function(id) {
   ns <- NS(id)
 
-  page_sidebar(
+  navset_card_tab(
 
     sidebar=sidebar(
       wrangle_outputs$ui(ns("wrangling"))
       ),
-
-    navset_tab(
 
     nav_panel(
       title="Summary",
@@ -115,7 +113,6 @@ ui <- function(id) {
       title="Data",
       raw_outputs$ui(ns("dats"))
     )
-  )
   )
 }
 

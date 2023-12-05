@@ -27,7 +27,7 @@ ui <- function(id) {
                   "Farm Layout"="farm_layout")),
     DTOutput(ns("browser")) %>% withSpinner(type=7),
 
-    downloadButton(ns("param_export"),"Export parameters"),
+    downloadButton(ns("param_export"),"Export parameters",style = "width:300px;"),
 
     br(),br(),
 

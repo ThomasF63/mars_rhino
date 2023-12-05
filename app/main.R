@@ -6,12 +6,12 @@ box::use(
   shiny[tagList,h4,bootstrapPage, navbarPage, tabPanel, div, moduleServer, NS, renderUI, tags, uiOutput, reactiveValues, reactive],
   bslib[page_fluid,page_navbar,nav_panel,navset_tab],
   waiter[autoWaiter,useWaiter,waiterShowOnLoad,spin_ellipsis,waiter_hide,waiterPreloader],
+  shinydisconnect,
 )
 # Import modules
 box::use(
   app/view/dashboard,
   app/view/raw_outputs,
-  #app/view/import_params,
   app/view/param_browser,
   app/view/comparisons,
   app/logic/file_io[get_params,get_crop_cals],
@@ -32,6 +32,7 @@ ui = function(id) {
 
     useWaiter(),
     waiterPreloader(html=loading_screen, color="#0000A5"),
+    shinydisconnect$disconnectMessage(),
 
     page_navbar(
       title="Prototype Farm Simulator",
@@ -40,17 +41,12 @@ ui = function(id) {
       ),
 
       nav_panel("Config",
-                # import_params$ui(ns("sim_inputs")) # import disabled until upload sorted out
                 param_browser$ui(ns("browser"))
       ),
 
       nav_panel("Compare",
                 comparisons$ui(ns("compare"))
       )
-
-      #,
-      #waiterShowOnLoad(html=spin_fading_circles()),
-      #,
 
     )
 
