@@ -9,5 +9,6 @@ harv,harvesting
 ph,post-harvest
 wc_manual,weed control (manual)
 wc_herbicide,weed control (herbicide)
+wc_mechanical,weed control (mechanical)
 prun_pro,pruning (professional)
 prun_main,pruning (main)

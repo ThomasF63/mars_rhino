@@ -25,7 +25,7 @@ ui <- function(id) {
                           "Crop"="crop"),
                 multiple=T),
 
-    DTOutput(ns("raw_dat")) %>% withSpinner()
+    DTOutput(ns("raw_dat")) %>% withSpinner(type=7)
   )
 }
 

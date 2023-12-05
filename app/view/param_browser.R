@@ -25,7 +25,7 @@ ui <- function(id) {
                 c("Simulation Controls"="sim_params",
                   "Crop Globals"="crop_params",
                   "Farm Layout"="farm_layout")),
-    DTOutput(ns("browser")) %>% withSpinner(),
+    DTOutput(ns("browser")) %>% withSpinner(type=7),
 
     downloadButton(ns("param_export"),"Export parameters"),
 

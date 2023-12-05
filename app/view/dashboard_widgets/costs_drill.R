@@ -21,7 +21,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner()
+    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner(type=7)
   )
 }
 
