@@ -8,7 +8,7 @@
 box::use(
   dplyr[...],
   shiny[h3, br, moduleServer, NS, fluidPage, fluidRow, reactive, renderText, textOutput, tagList],
-  bslib[page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
+  bslib[sidebar,page_sidebar,page_navbar,page_fluid,layout_columns,layout_column_wrap,value_box,navset_tab,nav_panel],
 )
 box::use(
   app/logic/kpis,
@@ -30,7 +30,13 @@ box::use(
 ui <- function(id) {
   ns <- NS(id)
 
-  navset_tab(
+  page_sidebar(
+
+    sidebar=sidebar(
+      wrangle_outputs$ui(ns("wrangling"))
+      ),
+
+    navset_tab(
 
     nav_panel(
       title="Summary",
@@ -44,8 +50,6 @@ ui <- function(id) {
         value_box(title="Average FTEs",value=textOutput(ns("ftes"))),
         value_box(title="Simulation Duration",value=textOutput(ns("sim_length")))
       ),
-
-      wrangle_outputs$ui(ns("wrangling")),
 
       br(),
 
@@ -111,6 +115,7 @@ ui <- function(id) {
       title="Data",
       raw_outputs$ui(ns("dats"))
     )
+  )
   )
 }
 
