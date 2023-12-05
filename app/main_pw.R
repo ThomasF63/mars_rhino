@@ -4,8 +4,8 @@
 # Import libraries
 box::use(
   shiny[tagList,h4,bootstrapPage, navbarPage, tabPanel, div, moduleServer, NS, renderUI, tags, uiOutput, reactiveValues, reactive],
-  bslib[page_fluid,page_navbar,nav_panel,navset_tab],
   waiter[autoWaiter,useWaiter,waiterShowOnLoad,spin_ellipsis,waiter_hide,waiterPreloader],
+  shinymanager,
 )
 # Import modules
 box::use(
@@ -18,6 +18,10 @@ box::use(
   app/logic/sim_run[run_sim],
 )
 
+check_credentials = shinymanager$check_credentials(
+  data.frame(user="mars",password="Ec0da7a")
+)
+
 loading_screen = tagList(
   spin_ellipsis(),
   # Other spinners: https://shiny.john-coene.com/waiter/
@@ -27,34 +31,33 @@ loading_screen = tagList(
 #' @export
 ui = function(id) {
   ns = NS(id)
+  shinymanager$secure_app(
 
-  page_fluid(
+  bootstrapPage(
+    title="Prototype Farm Simulator",
 
     useWaiter(),
+    #waiterShowOnLoad(html=spin_fading_circles()),
     waiterPreloader(html=loading_screen, color="#0000A5"),
 
-    page_navbar(
-      title="Prototype Farm Simulator",
-      nav_panel("Dashboard",
-                dashboard$ui(ns("sim_dashboard"))
-      ),
+    navbarPage("mars demo", id="nav", collapsible = T, windowTitle = "placeholder title",
 
-      nav_panel("Config",
-                # import_params$ui(ns("sim_inputs")) # import disabled until upload sorted out
-                param_browser$ui(ns("browser"))
-      ),
+               tabPanel("Dashboard",
+                        dashboard$ui(ns("sim_dashboard"))
+               ),
 
-      nav_panel("Compare",
-                comparisons$ui(ns("compare"))
-      )
+               tabPanel("Config",
+                        # import_params$ui(ns("sim_inputs")) # import disabled until upload sorted out
+                        param_browser$ui(ns("browser"))
+               ),
 
-      #,
-      #waiterShowOnLoad(html=spin_fading_circles()),
-      #,
+               tabPanel("Compare",
+                        comparisons$ui(ns("compare"))
+               ),
 
-    )
+              )
 
-
+  )
   )
 }
 
@@ -62,6 +65,7 @@ ui = function(id) {
 server = function(id) {
 
   moduleServer(id, function(input, output, session) {
+    shinymanager$secure_server(check_credentials)
 
     # Import base data
     # We hold onto these to undo changes to values (not implemented yet)

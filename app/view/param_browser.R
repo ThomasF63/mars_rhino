@@ -6,7 +6,9 @@
 box::use(
   DT[DTOutput,renderDT,editData],
   shiny[h3, br, moduleServer, NS, tagList, selectInput, observeEvent, downloadButton, downloadHandler, fileInput, reactiveValues, observe],
-  writexl[write_xlsx]
+  writexl[write_xlsx],
+  magrittr[...],
+  shinycssloaders[withSpinner]
 )
 box::use(
   app/logic/file_io[get_params],
@@ -23,7 +25,7 @@ ui <- function(id) {
                 c("Simulation Controls"="sim_params",
                   "Crop Globals"="crop_params",
                   "Farm Layout"="farm_layout")),
-    DTOutput(ns("browser")),
+    DTOutput(ns("browser")) %>% withSpinner(),
 
     downloadButton(ns("param_export"),"Export parameters"),
 

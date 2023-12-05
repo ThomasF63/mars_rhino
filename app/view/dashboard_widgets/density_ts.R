@@ -4,6 +4,7 @@ box::use(
   dplyr[...],
   shiny[h3, moduleServer, NS, tagList],
   echarts4r,
+  shinycssloaders[withSpinner]
 )
 box::use(
   app/logic/kpis,
@@ -14,7 +15,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    echarts4r$echarts4rOutput(ns("chart"))
+    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner()
   )
 }
 
@@ -34,7 +35,7 @@ server <- function(id,processed_sim_dat) {
         echarts4r$e_title("Crop Density","Plants/ha") %>%
         echarts4r$e_tooltip() %>%
         echarts4r$e_datazoom(show=FALSE) %>%
-        echarts4r$e_group("grp")
+        echarts4r$e_group("grp") #%>% echarts4r$e_toolbox_feature(feature = c("saveAsImage"))
     )
 
   })

@@ -4,6 +4,7 @@ box::use(
   dplyr[...],
   shiny[h3, moduleServer, NS, tagList],
   echarts4r,
+  shinycssloaders[withSpinner]
   #data.tree[FromDataFrameNetwork]
 )
 box::use(
@@ -15,7 +16,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    echarts4r$echarts4rOutput(ns("chart"))
+    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner()
   )
 }
 

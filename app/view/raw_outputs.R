@@ -5,7 +5,8 @@ box::use(
   shiny[h3, moduleServer, NS, tagList, selectInput, checkboxInput, checkboxGroupInput, reactive],
   shinyWidgets[pickerInput],
   rlang[...],
-  dplyr[...]
+  dplyr[...],
+  shinycssloaders[withSpinner]
 )
 
 #' @export
@@ -24,7 +25,7 @@ ui <- function(id) {
                           "Crop"="crop"),
                 multiple=T),
 
-    DTOutput(ns("raw_dat"))
+    DTOutput(ns("raw_dat")) %>% withSpinner()
   )
 }
 

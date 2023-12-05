@@ -4,6 +4,7 @@ box::use(
   dplyr[...],
   shiny[h3, moduleServer, NS, tagList, reactive],
   echarts4r,
+  shinycssloaders[withSpinner]
 )
 box::use(
   app/logic/kpis,
@@ -14,7 +15,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    echarts4r$echarts4rOutput(ns("chart"))
+    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner()
   )
 }
 
@@ -42,7 +43,7 @@ server <- function(id,sim_dat,sim_params,grp="grp") {
         echarts4r$e_title("Full time equivalents","1 FTE = 40h per week") %>%
         echarts4r$e_tooltip(trigger="axis") %>%
         echarts4r$e_datazoom(show=FALSE) %>%
-        echarts4r$e_group(grp)
+        echarts4r$e_group(grp) #%>% echarts4r$e_toolbox_feature(feature = c("saveAsImage"))
     )
 
   })

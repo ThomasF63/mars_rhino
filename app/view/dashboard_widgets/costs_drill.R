@@ -10,6 +10,7 @@ box::use(
   shiny[h3, moduleServer, NS, tagList],
   utils[read.csv],
   echarts4r,
+  shinycssloaders[withSpinner]
 )
 box::use(
   app/logic/kpis,
@@ -20,7 +21,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   tagList(
-    echarts4r$echarts4rOutput(ns("chart"))
+    echarts4r$echarts4rOutput(ns("chart")) %>% withSpinner()
   )
 }
 
@@ -70,6 +71,7 @@ server <- function(id,sim_dat,cost_type) {
               'echarts4r$e_x_axis(min=0,max=max(sim_dat()$timestep))',
               paste0('echarts4r$e_title("',title,'","")'),
               'echarts4r$e_tooltip(trigger="axis")')
+              #'echarts4r$e_toolbox_feature(feature = c("saveAsImage"))')
               #'echarts4r$e_datazoom()')
 
       return(c(beginning,series,end))
