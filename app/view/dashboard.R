@@ -122,7 +122,7 @@ server <- function(id,sim_dat,params) {
   moduleServer(id, function(input, output, session) {
 
     # Apply filters to simoutput
-    sim_filtered = wrangle_outputs$server("wrangling",sim_dat()) # later replace with module output
+    sim_filtered = wrangle_outputs$server("wrangling",sim_dat) # later replace with module output
 
     # Later on handle KPI panels with a kpi module to hide this away
     output$income = renderText( kpis$total_income(sim_dat()) )

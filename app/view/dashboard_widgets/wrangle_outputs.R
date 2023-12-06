@@ -26,12 +26,12 @@ server <- function(id,sim_dat) {
     sim_wrangled = reactive({
 
       if(input$aggregate_to_yr) {
-        data = sim_dat %>%
+        data = sim_dat() %>%
           group_by(scenario,crop,planting,crop_planting,year) %>%
           summarise(across(is.numeric, sum, na.rm=T)) %>%
           mutate(timestep=year)
       } else {
-        data = sim_dat %>%
+        data = sim_dat() %>%
           mutate(timestep=t)
       }
 
